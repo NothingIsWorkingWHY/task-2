@@ -5,23 +5,23 @@ app = Flask(__name__)
 def home():
     return render_template('home.html')
 
-@app.route('signup', methods=['GET', 'POST'])
+@app.route('/signup', methods=['GET', 'POST'])
 def signup():
     return render_template('signup.html')
 
-@app.route('login', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     return render_template('login.html')
 
-@app.route('plans')
+@app.route('/plans')
 def plans():
     return render_template('plans.html')
 
-@app.route('memberships')
+@app.route('/memberships')
 def memberships():
     return render_template('memberships.html')
 
-@app.route('purchase')
+@app.route('/purchase')
 def purchase():
     return render_template('purchase.html')
 
