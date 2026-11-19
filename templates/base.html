@@ -9,8 +9,8 @@
     <!-- link to tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg=#ffffff">
-    <header class="bg=#04FF00">
+<body class="bg-[#ffffff]">
+    <header class="bg-[#04FF00]">
         <h1 class="text-3xl font-bold text-center py-4">ToKa Fitness {% block header %}{% endblock %}</h1>
     </header>
     <!-- navigation bar for the website with links to other pages -->
@@ -28,7 +28,7 @@
         </div> 
     </nav> 
 <!-- main content section of the website -->
-    <section class="container mx-auto py-8">
+    <section class="container mx-auto py-8 flex justify-center items-center">
         {% block content %}{% endblock %}
     </section>
 </body>
