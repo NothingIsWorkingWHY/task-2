@@ -1,0 +1,40 @@
+services:
+  db:
+    image: mariadb:11
+    container_name: toka_db
+    restart: unless_stopped
+    env_file: .env
+    ports:
+      - "3306:3306"
+    volumes:
+    - toka_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    container_name: toka_web
+    env_file: .env
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    depends_on:
+      db:
+        condition: service_healthy
+    
+
+  adminer:
+    image: adminer
+    container_name: toka_adminer
+    ports:
+      - "8080:8080"
+    depends_on:
+     - db
+  
+
+  volumes:
+    toka_date:
