@@ -1,6 +1,15 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
+from werkzueg.security import generate_password_hash
+from config import Config
+from models import db
 
 app = Flask(__name__)
+app.config.from_object(Config)
+db.init_app(app)
+
+with app.app_context():
+    db.create_all()
+
 @app.route('/')
 def home():
     return render_template('home.html')
@@ -19,7 +28,7 @@ def signup():
             flash("Inputs cannot be empty")
             return render_template("signup.html")
         if len(password) < 8:
-            flash("Password must be longer than 8 characters")
+            flash("Password must be at least 8 characters")
             return render_template("signup.html")
         if password != confirmpassword:
             flash("Passwords do not match")
@@ -31,10 +40,16 @@ def signup():
             not any(c.islower() for c in password)
             or not any(c.isupper() for c in password)
             or not any(c.isdigit() for c in password)
-            or not any(c.isalnum() for c in password)
+            or not any(not c.isalnum() for c in password)
         ):
             flash("Password must contain at least one lowercase letter, one uppercase letter, one digit, and one special character")
             return render_template("signup.html")
+
+
+
+
+        
+        return render_template("login.html")
     return render_template('signup.html')
 
 @app.route('/login', methods=['GET', 'POST'])
