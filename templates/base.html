@@ -31,5 +31,18 @@
     <section class="container mx-auto py-8 flex justify-center items-center">
         {% block content %}{% endblock %}
     </section>
+    <settings class="container w-[100px] h-[100px] relative">
+        <div class="absolute right-0 bottom-0">
+            <form action="accessibility_settings">
+                <label for="ccessibilty">Choose setting:</label>
+                <select id="accessibility" name="accessibility">
+                    <option value="normal">Normal</option>
+                    <option value="contrast">High Contrast</option>
+                    <option value="dark">Dark Mode</option>
+                </select>
+                <input type="submit">
+            </form>
+        </div>
+    </settings>
 </body>
 </html>
