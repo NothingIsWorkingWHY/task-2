@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
-from werkzueg.security import generate_password_hash
+from werkzueg.security import generate_password_hash, check_password_hash
+import pymysql
 from config import Config
 from models import db
 
@@ -9,6 +10,7 @@ db.init_app(app)
 
 with app.app_context():
     db.create_all()
+
 
 @app.route('/')
 def home():
@@ -45,11 +47,21 @@ def signup():
             flash("Password must contain at least one lowercase letter, one uppercase letter, one digit, and one special character")
             return render_template("signup.html")
 
-
-
-
-        
-        return render_template("login.html")
+        conn = Config.SQLALCHEMY_DATABASE_URI
+        try:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "INSERT INTO users (firstname, lastname, email, phone, username, password_hash"
+                    "VALUES (%s, %s, %s, %s, %s, %s)",
+                    (firstname, lastname, email, phone, username, generate_password_hash(password))
+                )
+            conn.commit()
+        except pymysql.err.IntegrityError:
+            flash("Username or email already exist")
+            return render_template("signup.html")
+        finally:
+            conn.close
+        return redirect(url_for("login"))
     return render_template('signup.html')
 
 @app.route('/login', methods=['GET', 'POST'])
