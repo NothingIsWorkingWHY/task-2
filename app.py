@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request, flash
+from flask import Flask, render_template, redirect, url_for, request, flash, session
 from werkzueg.security import generate_password_hash, check_password_hash
 import pymysql
 from config import Config
@@ -66,6 +66,27 @@ def signup():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == "POST":
+        username = request.form["username"].strip
+        password = request.form["password"]
+
+        conn = Config.SQLALCHEMY_DATABASE_URI
+        with conn.cursor() as cur:
+            conn.execute(
+                "SELECT id, username, password_hash From users WHERE username = %s",
+                (username,),
+            )
+            user = cur.fetchone()
+        conn.close()
+        
+        if user and check_password_hash(user["password_hash"], password): 
+            session.clear() 
+            session["user_id"] = user["id"] 
+            session["username"] = user["username"] 
+            return redirect(url_for("index"))
+
+
+
     return render_template('login.html')
 
 @app.route('/plans')
