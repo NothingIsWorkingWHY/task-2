@@ -13,8 +13,8 @@ with app.app_context():
 
 
 @app.route('/')
-def home():
-    return render_template('home.html')
+def index():
+    return render_template('index.html')
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -78,7 +78,7 @@ def login():
             )
             user = cur.fetchone()
         conn.close()
-        
+
         if user and check_password_hash(user["password_hash"], password): 
             session.clear() 
             session["user_id"] = user["id"] 
