@@ -9,12 +9,14 @@ class User(db.Model):
     username = db.Column(db.String(50), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
+    consent = db.Column(db.Boolean, default=False)
     is_premium = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    membership = db.relationship("Memberships", backref="user")
     plans = db.relationship("WorkoutPlan", backref="user")
 
-class Content(db.Model):
-    __tablename__ = "content"
+class Memberships(db.Model):
+    __tablename__ = "memberships"
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(150), nullable=False)
     category = db.Column(db.String(50))
